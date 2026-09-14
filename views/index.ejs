@@ -33,9 +33,12 @@
                 </div>
                 <h3><%= post.title %></h3>
                 <p><%= post.content %></p>
-                <div class="post-actions">
-                  <a class="text-link" href="/posts/<%= post.id %>/edit">Edit post <span aria-hidden="true">→</span></a>
-                </div>
+              <div class="post-actions">
+                <a class="text-link" href="/posts/<%= post.id %>/edit">Edit post <span aria-hidden="true">→</span></a>
+                <form action="/posts/<%= post.id %>/delete" method="POST" style="margin: 0; display: inline-flex;">
+                  <button type="submit" class="delete-button" aria-label="Delete post">Delete</button>
+                </form>
+              </div>
               </article>
             <% }); %>
           </div>
