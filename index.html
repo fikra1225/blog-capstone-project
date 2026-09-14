@@ -328,23 +328,41 @@
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
     <script>
-      /* ─── In-memory post store ─── */
-      let posts = [
+      /* ─── Persistent post store ─── */
+      const seedPosts = [
         {
           id: "post-1",
           title: "A slower way to start the day",
           author: "Alex Morgan",
           content: "The best ideas rarely arrive on demand. I have started leaving the first hour of my morning open for reading, walking, and noticing what feels interesting before the day gets noisy.",
-          createdAt: new Date("2026-01-18T09:00:00"),
+          createdAt: "2026-01-18T09:00:00.000Z",
         },
         {
           id: "post-2",
           title: "Notes from a curious week",
           author: "Alex Morgan",
           content: "This week I learned that small experiments are easier to finish than ambitious plans. A little progress, written down, becomes a trail you can follow.",
-          createdAt: new Date("2026-01-12T09:00:00"),
+          createdAt: "2026-01-12T09:00:00.000Z",
         },
       ];
+
+      function loadPosts() {
+        const stored = localStorage.getItem("blog_posts");
+        if (stored) {
+          try {
+            return JSON.parse(stored).map(p => ({ ...p, createdAt: new Date(p.createdAt) }));
+          } catch (e) {
+            console.error("Failed to parse stored posts", e);
+          }
+        }
+        return seedPosts.map(p => ({ ...p, createdAt: new Date(p.createdAt) }));
+      }
+
+      function savePosts() {
+        localStorage.setItem("blog_posts", JSON.stringify(posts));
+      }
+
+      let posts = loadPosts();
 
       /* ─── Helpers ─── */
       function formatDate(date) {
@@ -408,6 +426,7 @@
       /* ─── Delete ─── */
       function deletePost(id) {
         posts = posts.filter(p => p.id !== id);
+        savePosts();
         renderPosts();
         showToast("Post deleted.");
       }
@@ -468,6 +487,8 @@
           posts.unshift({ id: uid(), title, author, content, createdAt: new Date() });
           showToast("Post published!");
         }
+
+        savePosts();
 
         renderPosts();
         resetForm();
