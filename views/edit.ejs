@@ -1,0 +1,26 @@
+<%- include("partials/header", { title: "Edit post" }) %>
+      <section class="editor-page">
+        <a class="back-link" href="/">← Back to all posts</a>
+        <div class="editor-heading">
+          <p class="eyebrow">Refine your thinking</p>
+          <h1>Edit post</h1>
+        </div>
+        <% if (errors.length > 0) { %>
+          <div class="error-message" role="alert">
+            <% errors.forEach((error) => { %><p><%= error %></p><% }); %>
+          </div>
+        <% } %>
+        <form class="form-card editor-form" action="/posts/<%= post.id %>/edit" method="POST">
+          <label for="title">Title</label>
+          <input id="title" name="title" type="text" value="<%= post.title %>" maxlength="120" required />
+          <label for="author">Your name</label>
+          <input id="author" name="author" type="text" value="<%= post.author %>" maxlength="60" required />
+          <label for="content">Your thoughts</label>
+          <textarea id="content" name="content" rows="14" maxlength="5000" required><%= post.content %></textarea>
+          <div class="form-actions">
+            <a class="secondary-button" href="/">Cancel</a>
+            <button class="primary-button" type="submit">Save changes <span aria-hidden="true">↗</span></button>
+          </div>
+        </form>
+      </section>
+<%- include("partials/footer") %>
