@@ -1,0 +1,20 @@
+<%- include("partials/header", { title: post.title }) %>
+      <section class="editor-page">
+        <a class="back-link" href="/">← Back to all posts</a>
+        <article class="single-post">
+          <div class="single-post-meta">
+            <span class="eyebrow">Published <%= formatDate(post.created_at) %></span>
+            <span class="meta-dot">·</span>
+            <span class="meta-author">By <%= post.author %></span>
+          </div>
+          <h1 class="single-post-title"><%= post.title %></h1>
+          <div class="single-post-body">
+            <% post.content.split('\n').forEach(function(para) { %>
+              <% if (para.trim()) { %><p><%= para %></p><% } %>
+            <% }); %>
+          </div>
+          <div class="single-post-actions">
+          </div>
+        </article>
+      </section>
+<%- include("partials/footer") %>

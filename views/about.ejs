@@ -1,0 +1,46 @@
+<%- include("partials/header", { title: "About" }) %>
+      <section class="about-page">
+        <div class="about-hero">
+          <p class="eyebrow">The story behind the words</p>
+          <h1>About Random<span class="about-brand-accent">Notes</span></h1>
+          <p class="about-intro">
+            A quiet corner of the internet for observations, lessons, and ideas in progress.
+            No algorithms, no ads — just honest writing.
+          </p>
+        </div>
+
+        <div class="about-grid">
+          <div class="about-card">
+            <span class="about-icon">✦</span>
+            <h2>What this is</h2>
+            <p>
+              Random Notes is a simple blogging space built to capture thoughts before they disappear.
+              Posts can be written — nothing is permanent, and that's the point.
+            </p>
+          </div>
+
+          <div class="about-card">
+            <span class="about-icon">◎</span>
+            <h2>How it works</h2>
+            <p>
+              Every post is stored in a PostgreSQL database so your words are never lost.
+              The app is built with Node.js, Express, and EJS — fast, simple, and reliable.
+            </p>
+          </div>
+
+          <div class="about-card">
+            <span class="about-icon">→</span>
+            <h2>Get started</h2>
+            <p>
+              Head back to the home page, scroll down to the "Write a post" form, and start typing.
+              Your first entry could be anything — a lesson, a thought, or just a note to yourself.
+            </p>
+          </div>
+        </div>
+
+        <div class="about-cta">
+          <a class="primary-button inline-button" href="/#write">Write your first post <span aria-hidden="true">↗</span></a>
+          <a class="secondary-button" href="/">Browse all posts</a>
+        </div>
+      </section>
+<%- include("partials/footer") %>

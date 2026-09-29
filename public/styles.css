@@ -94,3 +94,47 @@ textarea { min-height: 130px; resize: vertical; }
   .editor-heading h1, .not-found h1 { font-size: 2.7rem; }
   .editor-form { padding: 24px 20px; }
 }
+
+/* ---- Post title links ---- */
+.post-title-link { color: inherit; text-decoration: none; transition: color .2s; }
+.post-title-link:hover { color: var(--green); }
+
+/* ---- Single post view ---- */
+.single-post { padding-bottom: 80px; }
+.single-post-meta { color: var(--muted); font-size: .82rem; margin: 40px 0 16px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.meta-author { font-weight: 600; }
+.single-post-title { font-family: "Playfair Display", serif; font-size: clamp(2.2rem, 5vw, 3.6rem); letter-spacing: -.045em; margin: 0 0 36px; line-height: 1.15; }
+.single-post-body p { color: var(--muted); font-size: 1.08rem; line-height: 1.75; margin: 0 0 22px; max-width: 680px; }
+.single-post-actions { border-top: 1px solid var(--line); display: flex; align-items: center; gap: 20px; margin-top: 50px; padding-top: 22px; }
+
+/* ---- Search page ---- */
+.search-page { max-width: 720px; }
+.search-form { margin: 0 0 36px; }
+.search-input-wrap { display: flex; gap: 12px; }
+.search-input-wrap input[type="search"] { flex: 1; font-size: 1rem; }
+.search-btn { white-space: nowrap; }
+.search-results-header { margin-bottom: 24px; }
+.search-count { color: var(--muted); font-size: .9rem; }
+.search-count strong { color: var(--ink); }
+.search-no-results { color: var(--muted); font-size: .95rem; }
+.search-no-results strong { color: var(--ink); }
+.search-post-list .post-card { margin-top: 0; }
+
+/* ---- About page ---- */
+.about-page { padding-bottom: 100px; }
+.about-hero { padding: 80px 0 60px; max-width: 700px; }
+.about-hero h1 { font-family: "Playfair Display", serif; font-size: clamp(2.8rem, 6vw, 4.5rem); letter-spacing: -.05em; margin: 16px 0; }
+.about-brand-accent { color: var(--peach); }
+.about-intro { color: var(--muted); font-size: 1.12rem; margin: 20px 0 0; max-width: 520px; line-height: 1.7; }
+.about-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 56px; }
+.about-card { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 30px 26px; }
+.about-icon { color: var(--peach); font-size: 1.6rem; display: block; margin-bottom: 14px; }
+.about-card h2 { font-family: "Playfair Display", serif; font-size: 1.4rem; margin: 0 0 12px; }
+.about-card p { color: var(--muted); font-size: .92rem; line-height: 1.7; margin: 0; }
+.about-cta { display: flex; gap: 14px; align-items: center; }
+@media (max-width: 760px) {
+  .about-grid { grid-template-columns: 1fr; }
+  .search-input-wrap { flex-direction: column; }
+  .about-cta { flex-direction: column; align-items: flex-start; }
+  .single-post-actions { flex-wrap: wrap; }
+}

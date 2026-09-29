@@ -7,6 +7,7 @@ const port = process.env.PORT || 3000;
 app.set("view engine", "ejs");
 app.set("views", "views");
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(express.static("public"));
 
 // ---------- helpers ----------
@@ -85,70 +86,83 @@ app.post("/posts", async (req, res) => {
   }
 });
 
-// GET /posts/:id/edit — show edit form
-app.get("/posts/:id/edit", async (req, res) => {
+
+
+// GET /posts/:id — view a single post
+app.get("/posts/:id", async (req, res) => {
   try {
     const { rows } = await pool.query(
       "SELECT * FROM posts WHERE id = $1",
       [req.params.id]
     );
     if (rows.length === 0) return res.status(404).render("404");
-    res.render("edit", { post: rows[0], errors: [] });
+    res.render("post", { post: rows[0] });
   } catch (err) {
-    console.error("GET /posts/:id/edit error:", err);
+    console.error("GET /posts/:id error:", err);
     res.status(500).send("Database error.");
   }
 });
 
-// POST /posts/:id/edit — update a post
-app.post("/posts/:id/edit", async (req, res) => {
-  const formData = getPostInput(req.body);
-  const errors = validatePost(formData);
-
-  if (errors.length > 0) {
-    try {
+// GET /search — search posts by title, author, or content
+app.get("/search", async (req, res) => {
+  const query = (req.query.q || "").trim();
+  try {
+    let posts = [];
+    if (query) {
       const { rows } = await pool.query(
-        "SELECT * FROM posts WHERE id = $1",
-        [req.params.id]
+        `SELECT * FROM posts
+         WHERE title ILIKE $1
+            OR author ILIKE $1
+            OR content ILIKE $1
+         ORDER BY created_at DESC`,
+        [`%${query}%`]
       );
-      if (rows.length === 0) return res.status(404).render("404");
-      return res.status(400).render("edit", {
-        post: { ...rows[0], ...formData },
-        errors,
-      });
-    } catch (err) {
-      console.error("POST /posts/:id/edit (validation re-render) error:", err);
-      return res.status(500).send("Database error.");
+      posts = rows;
     }
-  }
-
-  try {
-    const result = await pool.query(
-      "UPDATE posts SET title = $1, author = $2, content = $3 WHERE id = $4",
-      [formData.title, formData.author, formData.content, req.params.id]
-    );
-    if (result.rowCount === 0) return res.status(404).render("404");
-    res.redirect("/");
+    res.render("search", { posts, query });
   } catch (err) {
-    console.error("POST /posts/:id/edit error:", err);
-    res.status(500).send("Could not update post.");
+    console.error("GET /search error:", err);
+    res.status(500).send("Database error.");
   }
 });
 
-// POST /posts/:id/delete — delete a post
-app.post("/posts/:id/delete", async (req, res) => {
+// GET /about — about page
+app.get("/about", (req, res) => {
+  res.render("about");
+});
+
+// ---------- JSON API (used by index.html) ----------
+
+// GET /api/posts — return all posts as JSON
+app.get("/api/posts", async (req, res) => {
   try {
-    const result = await pool.query(
-      "DELETE FROM posts WHERE id = $1",
-      [req.params.id]
-    );
-    if (result.rowCount === 0) return res.status(404).render("404");
-    res.redirect("/");
+    const { rows } = await pool.query("SELECT * FROM posts ORDER BY created_at DESC");
+    res.json(rows);
   } catch (err) {
-    console.error("POST /posts/:id/delete error:", err);
-    res.status(500).send("Could not delete post.");
+    console.error("GET /api/posts error:", err);
+    res.status(500).json({ error: "Database error." });
   }
 });
+
+// POST /api/posts — create a post, return the new row as JSON
+app.post("/api/posts", async (req, res) => {
+  const { title, author, content } = req.body;
+  if (!title?.trim() || !author?.trim() || !content?.trim()) {
+    return res.status(400).json({ error: "Title, author, and content are all required." });
+  }
+  try {
+    const { rows } = await pool.query(
+      "INSERT INTO posts (title, author, content) VALUES ($1, $2, $3) RETURNING *",
+      [title.trim(), author.trim(), content.trim()]
+    );
+    res.status(201).json(rows[0]);
+  } catch (err) {
+    console.error("POST /api/posts error:", err);
+    res.status(500).json({ error: "Could not save post." });
+  }
+});
+
+
 
 // 404 catch-all
 app.use((req, res) => {
